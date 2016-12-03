@@ -1,0 +1,1 @@
+/home/lnr/Workspace/QuteWerewolf/shared/Konsole.qml

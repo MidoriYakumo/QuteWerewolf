@@ -3,10 +3,8 @@ import Qt.WebSockets 1.0
 import QtQuick.LocalStorage 2.0
 
 import "config.js" as Config
-import "game.js" as Game
 
 Item {
-	id: server
 
 	property var konsole: console
 
@@ -20,21 +18,11 @@ Item {
 		name: "werewolf"
 
 		onClientConnected: {
-			var player = playerComp.createObject(server, {ws: webSocket})
-			player.start()
-		}
-	}
-
-	Component {
-		id: playerComp
-
-		Player {
-
+			konsole.log(webSocket.url, "connected.")
 		}
 	}
 
 	Component.onCompleted: {
-		Game.konsole = konsole
-		Game.konsole.log("Server inited.")
+		konsole.log("Server inited.")
 	}
 }

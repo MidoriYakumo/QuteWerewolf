@@ -8,11 +8,11 @@ Item {
 		id: konsole
 	}
 
-	Server {
-		id: server
+	TestClient {
+		id: client
 	}
 
 	Component.onCompleted: {
-		server.konsole = konsole
+		client.konsole = konsole
 	}
 }
