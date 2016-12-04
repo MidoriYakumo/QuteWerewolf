@@ -2,16 +2,15 @@ import QtQuick 2.0
 import Qt.WebSockets 1.0
 import QtQuick.LocalStorage 2.0
 
+import "global.js" as Global
 import "config.js" as Config
 import "game.js" as Game
 
 Item {
 	id: server
 
-	property var konsole: console
-
 	WebSocketServer {
-		id: ws
+		id: wsever
 
 		accept: true
 		host: Config.host
@@ -20,7 +19,14 @@ Item {
 		name: "werewolf"
 
 		onClientConnected: {
+			if (Game.players.length >= Config.maxPlayerCnt) {
+				rejectSocket.ws = webSocket
+				rejectSocket.reject("max cnt")
+				return
+			}
+
 			var player = playerComp.createObject(server, {ws: webSocket})
+			Game.players.push(player)
 			player.start()
 		}
 	}
@@ -33,8 +39,11 @@ Item {
 		}
 	}
 
+	Socket {
+		id: rejectSocket
+	}
+
 	Component.onCompleted: {
-		Game.konsole = konsole
-		Game.konsole.log("Server inited.")
+		Global.konsole.log("Server inited.")
 	}
 }

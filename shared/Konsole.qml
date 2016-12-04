@@ -9,6 +9,7 @@ ListView {
 	focus: true
 
 	property bool tee: true
+	property int linewidth: 80
 
 	model: []
 	delegate: Label {
@@ -26,73 +27,49 @@ ListView {
 	function debug() {
 		var s = listStringfy(arguments)
 		var list = model
-		list.push({
+		list.unshift({
 			"text": s,
 			"color": "#4DD0E5"
 		})
 		if (tee)
 			console.debug(s)
-		var onBottom = contentY + height >= contentHeight
-		var cy = contentY
 		model = list
-		if (onBottom)
-			positionViewAtEnd()
-		else
-			contentY = cy
 	}
 
 	function info() {
 		var s = listStringfy(arguments)
 		var list = model
-		list.push({
+		list.unshift({
 			"text": s,
 			"color": "#6AFB92"
 		})
 		if (tee)
 			console.info(s)
-		var onBottom = contentY + height >= contentHeight
-		var cy = contentY
 		model = list
-		if (onBottom)
-			positionViewAtEnd()
-		else
-			contentY = cy
 	}
 
 	function log() {
 		var s = listStringfy(arguments)
 		var list = model
-		list.push({
+		list.unshift({
 			"text": s,
 			"color": "#FF8040"
 		})
 		if (tee)
 			console.log(s)
-		var onBottom = contentY + height >= contentHeight
-		var cy = contentY
 		model = list
-		if (onBottom)
-			positionViewAtEnd()
-		else
-			contentY = cy
 	}
 
 	function warn() {
 		var s = listStringfy(arguments)
 		var list = model
-		list.push({
+		list.unshift({
 			"text": s,
 			"color": "#E6624E"
 		})
 		if (tee)
 			console.warn(s)
-		var onBottom = contentY + height >= contentHeight
-		var cy = contentY
 		model = list
-		if (onBottom)
-			positionViewAtEnd()
-		else
-			contentY = cy
 	}
 
 	function listStringfy(list) {
@@ -105,7 +82,8 @@ ListView {
 	}
 
 	function stringfy(o, i){
-		var r = o.toString()
+		var r = (o === undefined)?"undefined":
+			(o === null)?"null":o.toString()
 		var ri = ""
 		for (var j=0;j<i;j++) ri += "  "
 		if (r === "[object Object]") {
@@ -121,16 +99,15 @@ ListView {
 		}
 
 		r = r.split("\n")
-		var lineWidth = 40
 		var rr = []
 		for (j in r) {
 			var rj = r[j]
-			rr.push(rj.slice(0, lineWidth))
-			rj = rj.slice(lineWidth)
-			lineWidth += (i/*+3*/)*2
+			rr.push(rj.slice(0, linewidth))
+			rj = rj.slice(linewidth)
+			linewidth += (i/*+3*/)*2
 			while (rj.length > 0) {
-				rr.push(ri + " " + rj.slice(0, lineWidth))
-				rj = rj.slice(lineWidth)
+				rr.push(ri + " " + rj.slice(0, linewidth))
+				rj = rj.slice(linewidth)
 			}
 		}
 		rr = rr.join("\n")
